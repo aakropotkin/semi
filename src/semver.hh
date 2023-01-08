@@ -17,6 +17,7 @@ namespace semi {
 
   struct SemVer {
 
+    std::string version;
     std::string raw;
     unsigned int major;
     unsigned int minor;
