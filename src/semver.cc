@@ -28,8 +28,23 @@ namespace semi {
       {
         this->raw   = version;
         this->major = std::stol( match[1] );
-        this->minor = std::stol( match[2] );
-        this->patch = std::stol( match[3] );
+        if ( match[2].matched )
+          {
+            this->minor = std::stol( match[2] );
+          }
+        else
+          {
+            this->minor = 0;
+          }
+        if ( match[3].matched )
+          {
+            this->patch = std::stol( match[3] );
+          }
+        else
+          {
+            this->patch = 0;
+          }
+
         if ( match[4].matched )
           {
             std::istringstream iss( match[4] );
@@ -44,6 +59,7 @@ namespace semi {
           {
             this->prerelease = {};
           }
+
         if ( match[5].matched )
           {
             std::istringstream iss( match[5] );

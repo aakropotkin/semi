@@ -24,29 +24,31 @@ namespace semi {
     unsigned int patch;
     std::vector<std::string> prerelease;
     std::vector<std::string> build;
-    bool includePrerelease;
-    bool loose;
-    bool rtl;  /* Right to Left vs. Left to Right */
 
-    SemVer(
-      const std::string version,
     /**
      * Normally "max version" ranges will prefer lower versions if higher
      * versioned candidates are tagged with a pre-release suffix.
      * This option allows pre-release versions to satisfy ranges even if they
      * don't explicitly opt into the use of pre-release specifiers.
      */
-      bool includePrerelease = false,
+    bool includePrerelease;
     /**
      * Interpret version ranges loosely.
      * This allows non-compliant ranges to be normalized without errors.
      */
-      bool loose = false,
+    bool loose;
     /**
+     * Right to Left vs. Left to Right.
      * Causes rightmost versions to be used.
      * E.g. "4.2.0.1" => "2.0.1"
      */
-      bool rtl = false
+    bool rtl;
+
+    SemVer(
+      const std::string version,
+      bool includePrerelease = false,
+      bool loose             = false,
+      bool rtl               = false
     );
 
     std::string format();

@@ -17,7 +17,8 @@ semver_class()
   return
     ( SemVer( "1.0.0" ).compare( SemVer( "2.0.0" ) ) < 0 ) &&
     ( 0 < SemVer( "2.0.0" ).compare( SemVer( "1.0.0" ) ) ) &&
-    ( SemVer( "1.0.0" ).compare( SemVer( "1.0.0" ) ) == 0 )
+    ( SemVer( "1.0.0" ).compare( SemVer( "1.0.0" ) ) == 0 ) &&
+    ( SemVer( "1.0.0" ).toString() == "1.0.0" )
   ;
 }
 
