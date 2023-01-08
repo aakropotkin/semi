@@ -51,12 +51,12 @@ namespace semi {
 
     std::string format();
     std::string toString();
-    bool compare( const SemVer & other );
-    bool compareMain( const SemVer & other );
-    bool comparePre( const SemVer & other );
-    bool compareBuild( const SemVer & other );
+    char compare( const SemVer & other );
+    char compareMain( const SemVer & other );
+    char comparePre( const SemVer & other );
+    char compareBuild( const SemVer & other );
 
-    SemVer inc( const std::string release, unsigned short identifier );
+    SemVer inc( const std::string release, const std::string identifier );
 
   };
 

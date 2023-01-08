@@ -2,3 +2,4 @@ compile_flags.txt
 *.o
 lib*.so
 lib*.dylib
+test

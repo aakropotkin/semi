@@ -106,6 +106,123 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
+    std::string
+  SemVer::toString()
+  {
+    return this->version;
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
+    char
+  SemVer::compare( const SemVer & other )
+  {
+    SemVer o( other.version,
+              this->includePrerelease,
+              this->loose,
+              this->rtl
+            );
+    if ( this->version == o.version )
+      {
+        return 0;
+      }
+    char c = this->compareMain( other );
+    if ( c != 0 )
+      {
+        return c;
+      }
+    return this->comparePre( other );
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
+    char
+  SemVer::compareMain( const SemVer & other )
+  {
+    SemVer o( other.version,
+              this->includePrerelease,
+              this->loose,
+              this->rtl
+            );
+    if ( this->major != o.major )
+      {
+        return this->major - o.major;
+      }
+    if ( this->minor != o.minor )
+      {
+        return this->minor - o.minor;
+      }
+    return this->patch - o.patch;
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
+    char
+  SemVer::comparePre( const SemVer & other )
+  {
+    SemVer o( other.version,
+              this->includePrerelease,
+              this->loose,
+              this->rtl
+            );
+    if ( this->prerelease.empty() && o.prerelease.empty() )
+      {
+        return 0;
+      }
+    if ( this->prerelease.empty() && ( ! o.prerelease.empty() ) )
+      {
+        return -1;
+      }
+    if ( ( ! this->prerelease.empty() ) && o.prerelease.empty() )
+      {
+        return 1;
+      }
+    return this->prerelease < o.prerelease;
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
+    char
+  SemVer::compareBuild( const SemVer & other )
+  {
+    SemVer o( other.version,
+              this->includePrerelease,
+              this->loose,
+              this->rtl
+            );
+    if ( this->build.empty() && o.build.empty() )
+      {
+        return 0;
+      }
+    if ( this->build.empty() && ( ! o.build.empty() ) )
+      {
+        return -1;
+      }
+    if ( ( ! this->build.empty() ) && o.build.empty() )
+      {
+        return 1;
+      }
+    return this->build < o.build;
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
+  // FIXME
+    SemVer
+  SemVer::inc( const std::string release, const std::string identifier )
+  {
+    SemVer o( *this );
+    return o;
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
 }  /* End Namespace `semi' */
 
 /* -------------------------------------------------------------------------- *
