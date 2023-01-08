@@ -196,7 +196,15 @@ namespace semi {
       {
         return 1;
       }
-    return this->prerelease < o.prerelease;
+    if ( this->prerelease < o.prerelease )
+      {
+        return -1;
+      }
+    if ( this->prerelease == o.prerelease )
+      {
+        return 0;
+      }
+    return 1;
   }
 
 
@@ -222,7 +230,15 @@ namespace semi {
       {
         return 1;
       }
-    return this->build < o.build;
+    if ( this->build < o.build )
+      {
+        return -1;
+      }
+    if ( this->build == o.build )
+      {
+        return 0;
+      }
+    return 1;
   }
 
 
