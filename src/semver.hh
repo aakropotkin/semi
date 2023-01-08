@@ -6,6 +6,9 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+
 /* -------------------------------------------------------------------------- */
 
 namespace semi {
@@ -15,11 +18,11 @@ namespace semi {
   struct SemVer {
 
     std::string raw;
-    unsigned short major;
-    unsigned short minor;
-    unsigned short patch;
-    std::optional<std::vector<std::string>> prerelease;
-    std::optional<std::vector<std::string>> build;
+    unsigned int major;
+    unsigned int minor;
+    unsigned int patch;
+    std::vector<std::string> prerelease;
+    std::vector<std::string> build;
     bool includePrerelease;
     bool loose;
     bool rtl;  /* Right to Left vs. Left to Right */

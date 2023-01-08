@@ -6,6 +6,8 @@
 
 #pragma once
 
+#include <regex>
+
 namespace semi {
   namespace re {
 
@@ -35,7 +37,7 @@ namespace semi {
       "(" + NUMERICIDENTIFIER + ")\\." +
       "(" + NUMERICIDENTIFIER + ")";
 
-    static const std::strign MAINVERSIONLOOSE =
+    static const std::string MAINVERSIONLOOSE =
       "(" + NUMERICIDENTIFIERLOOSE + ")\\." +
       "(" + NUMERICIDENTIFIERLOOSE + ")\\." +
       "(" + NUMERICIDENTIFIERLOOSE + ")";
@@ -121,11 +123,12 @@ namespace semi {
 
     // Coercion.
     // Extract anything that could conceivably be a part of a valid semver
-    static const std::string COERCE =
-      "(^|[^\\d])(\\d{1,16})" +
-      "(?:\\.(\\d{1,16}))?" +
-      "(?:\\.(\\d{1,16}))?" +
-      "(?:$|[^\\d])";
+    static const std::string COERCE(
+      "(^|[^\\d])(\\d{1,16})"
+      "(?:\\.(\\d{1,16}))?"
+      "(?:\\.(\\d{1,16}))?"
+      "(?:$|[^\\d])"
+    );
     static const std::string COERCERTL = COERCE; // XXX: `g' flag
 
     // Tilde ranges.
