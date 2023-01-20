@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+#include "semver.hh"
+
 /* -------------------------------------------------------------------------- */
 
 namespace semi {
@@ -52,22 +54,34 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     Range(
-      std::string range,
-      bool        includePrerelease = false,
-      bool        loose             = false
+      const std::string range,
+            bool        includePrerelease = false,
+            bool        loose             = false
     );
 
 
 /* -------------------------------------------------------------------------- */
 
-    std::vector<std::vector<std::string>> parseRange( std::string range );
+    std::vector<std::vector<std::string>> parseRange( const std::string range );
 
 
 /* -------------------------------------------------------------------------- */
 
     /* Comparators */
 
-    bool intersects( const Range & other );
+    bool intersects( const Range & other ) const;
+
+    bool test(
+      const std::string comp,
+            bool        includePrerelease = false,
+            bool        loose             = false
+    ) const;
+
+    bool test(
+      const SemVer & semver,
+            bool     includePrerelease = false,
+            bool     loose             = false
+    ) const;
 
 
 /* -------------------------------------------------------------------------- */
@@ -75,10 +89,7 @@ namespace semi {
     /* Serializers */
 
     std::string format();
-    std::string toString();
-
-
-/* -------------------------------------------------------------------------- */
+    std::string toString() const;
 
 
 /* -------------------------------------------------------------------------- */

@@ -199,7 +199,7 @@ namespace semi {
    * call `format' first to render those updates.
    */
     std::string
-  SemVer::toString()
+  SemVer::toString() const
   {
     return this->version;
   }
@@ -208,7 +208,7 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     char
-  SemVer::compare( const SemVer & other )
+  SemVer::compare( const SemVer & other ) const
   {
     SemVer o( other.version,
               this->includePrerelease,
@@ -231,7 +231,7 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     char
-  SemVer::compareMain( const SemVer & other )
+  SemVer::compareMain( const SemVer & other ) const
   {
     SemVer o( other.version,
               this->includePrerelease,
@@ -271,7 +271,7 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     char
-  SemVer::comparePre( const SemVer & other )
+  SemVer::comparePre( const SemVer & other ) const
   {
     SemVer o( other.version,
               this->includePrerelease,
@@ -316,7 +316,7 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     char
-  SemVer::compareBuild( const SemVer & other )
+  SemVer::compareBuild( const SemVer & other ) const
   {
     SemVer o( other.version,
               this->includePrerelease,

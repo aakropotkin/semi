@@ -83,17 +83,17 @@ namespace semi {
     /* Serializers */
 
     std::string format();
-    std::string toString();
+    std::string toString() const;
 
 
 /* -------------------------------------------------------------------------- */
 
     /* Comparators */
 
-    char compare( const SemVer & other );
-    char compareMain( const SemVer & other );
-    char comparePre( const SemVer & other );
-    char compareBuild( const SemVer & other );
+    char compare( const SemVer & other ) const;
+    char compareMain( const SemVer & other ) const;
+    char comparePre( const SemVer & other ) const;
+    char compareBuild( const SemVer & other ) const;
 
 
 /* -------------------------------------------------------------------------- */

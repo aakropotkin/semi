@@ -23,7 +23,6 @@ namespace semi {
 
     /* Data Members */
 
-    std::string raw;
     std::string op;
     std::string value;
     SemVer      semver;
@@ -47,29 +46,29 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     Comparator(
-      std::string comp              = "",
-      bool        includePrerelease = false,
-      bool        loose             = false
+      const std::string comp              = "",
+            bool        includePrerelease = false,
+            bool        loose             = false
     );
 
     Comparator(
-      std::string op,
-      SemVer      semver,
-      bool        includePrerelease = false,
-      bool        loose             = false
+      const std::string op,
+            SemVer      semver,
+            bool        includePrerelease = false,
+            bool        loose             = false
     );
 
-    Comparator(
-      std::string op,
-      std::string semver,
-      bool        includePrerelease = false,
-      bool        loose             = false
-    );
+    //Comparator(
+    //  std::string op,
+    //  std::string semver,
+    //  bool        includePrerelease = false,
+    //  bool        loose             = false
+    //);
 
 
 /* -------------------------------------------------------------------------- */
 
-    void parseComparator( std::string comp );
+    void parseComparator( const std::string comp );
 
 
 /* -------------------------------------------------------------------------- */
@@ -80,17 +79,17 @@ namespace semi {
       const Comparator & other,
             bool         includePrerelease = false,
             bool         loose             = false
-    );
+    ) const;
 
-    bool test( const SemVer version );
-    bool test( const std::string version );
+    bool test( const SemVer & version ) const;
+    bool test( const std::string version ) const;
 
 
 /* -------------------------------------------------------------------------- */
 
     /* Serializers */
 
-    std::string toString();
+    std::string toString() const;
 
 
 /* -------------------------------------------------------------------------- */
