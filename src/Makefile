@@ -13,9 +13,9 @@ BIN_CXXFLAGS = $(CXXFLAGS)
 
 LIB_EXT = .so
 
-SOURCES = semver.cc
+SOURCES = semver.cc comparator.cc range.cc
 
-semver.cc: semver.hh regexes.hh
+semver.cc: semver.hh regexes.hh comparator.hh range.hh
 
 libsemi$(LIB_EXT): $(SOURCES)
 	$(CXX) $(LIB_CXXFLAGS) -o $@ $(SOURCES)

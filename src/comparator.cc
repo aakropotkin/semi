@@ -7,6 +7,7 @@
 
 #include <regex>
 #include <sstream>
+#include <stdexcept>
 
 #include "comparator.hh"
 #include "regexes.hh"
@@ -20,6 +21,56 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
   static const SemVer ANY = SemVer();
+
+
+/* -------------------------------------------------------------------------- */
+
+    static bool
+  cmp( const SemVer & a, const std::string & op, const SemVer & b, bool loose )
+  {
+    if ( op == "===" )
+      {
+        return a.version == b.version;
+      }
+    if ( op == "!==" )
+      {
+        return a.version != b.version;
+      }
+
+    const SemVer _a =
+      a.loose == loose ? a : SemVer( a.version, a.includePrerelease, loose );
+    const SemVer _b =
+      a.loose == loose ? b : SemVer( b.version, b.includePrerelease, loose );
+
+    if ( ( op == "" ) || ( op == "=" ) || ( op == "==" ) )
+      {
+        return _a.compare( _b ) == 0;
+      }
+    if ( op == "!=" )
+      {
+        return _a.compare( _b ) != 0;
+      }
+    if ( op == ">" )
+      {
+        return _a.compare( _b ) > 0;
+      }
+    if ( op == ">=" )
+      {
+        return _a.compare( _b ) >= 0;
+      }
+    if ( op == "<" )
+      {
+        return _a.compare( _b ) < 0;
+      }
+    if ( op == "<=" )
+      {
+        return _a.compare( _b ) <= 0;
+      }
+
+    throw std::invalid_argument( "Invalid operator: '" + op + "'" );
+    /* Unreachable */
+    return false;
+  }
 
 
 /* -------------------------------------------------------------------------- */
@@ -70,7 +121,7 @@ namespace semi {
     void
   Comparator::parseComparator( const std::string comp )
   {
-    std::regex pattern(
+    const std::regex pattern(
       this->loose ? re::COMPARATORLOOSE : re::COMPARATOR, std::regex::ECMAScript
     );
     std::smatch match;
@@ -128,7 +179,7 @@ namespace semi {
           {
             return true;
           }
-        Range r = Range( other.value, includePrerelease, loose );
+        const Range r = Range( other.value, includePrerelease, loose );
         return r.test( this->value );
       }
     else if ( other.op == "" )
@@ -137,7 +188,7 @@ namespace semi {
           {
             return true;
           }
-        Range r = Range( this->value, includePrerelease, loose );
+        const Range r = Range( this->value, includePrerelease, loose );
         return r.test( other.semver );
       }
 
@@ -155,13 +206,20 @@ namespace semi {
       ( ( this->op == ">=" ) || ( this->op == "<=" ) ) &&
       ( ( other.op == ">=" ) || ( other.op == "<=" ) );
 
-    // const bool oppositeDirectionsLessThan = FIXME `cmp'
-    // const bool oppositeDirectionsGreaterThan = FIXME `cmp'
+    const bool oppositeDirectionsLessThan =
+      cmp( this->semver, "<", other.semver, loose ) &&
+      ( ( this->op == ">=" ) || ( this->op == ">" ) ) &&
+      ( ( other.op == "<=" ) || ( other.op == "<" ) );
 
-    // FIXME `cmp'
+    const bool oppositeDirectionsGreaterThan =
+      cmp( this->semver, ">", other.semver, loose ) &&
+      ( ( this->op == "<=" ) || ( this->op == "<" ) ) &&
+      ( ( other.op == ">=" ) || ( other.op == ">" ) );
+
     return
       sameDirectionIncreasing || sameDirectionDecreasing ||
-      ( sameSemVer && differentDirectionsInclusive );
+      ( sameSemVer && differentDirectionsInclusive ) ||
+      oppositeDirectionsLessThan || oppositeDirectionsGreaterThan;
   }
 
 
@@ -174,14 +232,20 @@ namespace semi {
       {
         return true;
       }
-    // FIXME `cmp'
-    return this->semver.compare( version ) == 0;
+
+    bool rsl = false;
+
+    try {
+      rsl = cmp( this->semver, this->op, version, this->loose );
+    } catch( std::invalid_argument e ) {}
+
+    return rsl;
   }
 
     bool
   Comparator::test( const std::string version ) const
   {
-    SemVer o = SemVer( version, this->includePrerelease, this->loose );
+    const SemVer o = SemVer( version, this->includePrerelease, this->loose );
     return this->test( o );
   }
 

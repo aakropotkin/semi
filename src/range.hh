@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+#include "comparator.hh"
 #include "semver.hh"
 
 /* -------------------------------------------------------------------------- */
@@ -23,8 +24,8 @@ namespace semi {
 
     /* Data Members */
 
+    std::string raw;   /* This should be a Sum Type with comparator and range */
     std::string range;
-    std::string raw;
     /**
      * Version ranges are a collection of subexpressions containing version
      * constraints as their terms.
@@ -57,6 +58,18 @@ namespace semi {
       const std::string range,
             bool        includePrerelease = false,
             bool        loose             = false
+    );
+
+    Range(
+      const Comparator & range,
+            bool         includePrerelease = false,
+            bool         loose             = false
+    );
+
+    Range(
+      const Range & range,
+            bool    includePrerelease = false,
+            bool    loose             = false
     );
 
 
