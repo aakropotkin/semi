@@ -34,7 +34,7 @@ namespace semi {
      * containing constraints.
      *   "a || b || c && d || e" -> [[a], [b], [c, d], [e]]
      */
-    std::vector<std::vector<std::string>> set;
+    std::vector<std::vector<Comparator>> set;
 
     /**
      * Normally "max version" ranges will prefer lower versions if higher
@@ -61,21 +61,21 @@ namespace semi {
     );
 
     Range(
-      const Comparator & range,
-            bool         includePrerelease = false,
-            bool         loose             = false
-    );
-
-    Range(
       const Range & range,
             bool    includePrerelease = false,
             bool    loose             = false
     );
 
+    Range(
+      const Comparator & range,
+            bool         includePrerelease = false,
+            bool         loose             = false
+    );
+
 
 /* -------------------------------------------------------------------------- */
 
-    std::vector<std::vector<std::string>> parseRange( const std::string range );
+    std::vector<Comparator> parseRange( const std::string range );
 
 
 /* -------------------------------------------------------------------------- */
