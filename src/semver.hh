@@ -41,6 +41,7 @@ namespace semi {
     /**
      * Interpret version ranges loosely.
      * This allows non-compliant ranges to be normalized without errors.
+     * Specifically this allows "00.01.002" to be read as "0.1.2"
      */
     bool loose;
 
@@ -56,6 +57,11 @@ namespace semi {
 
     /* Constructors */
 
+    /**
+     * Construct a version from a string.
+     * The provided string must not omit any parts.
+     * To parse a version string with missing parts you must use
+     */
     SemVer(
       const std::string version,
             bool        includePrerelease = false,
@@ -94,7 +100,8 @@ namespace semi {
 
     /* Misc. */
 
-    SemVer inc( const std::string release, const std::string identifier );
+    // TODO
+    //SemVer inc( const std::string release, const std::string identifier );
 
 
 /* -------------------------------------------------------------------------- */

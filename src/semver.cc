@@ -5,6 +5,7 @@
  * -------------------------------------------------------------------------- */
 
 #include <sstream>
+#include <algorithm>
 
 #include "semver.hh"
 #include "regexes.hh"
@@ -281,23 +282,34 @@ namespace semi {
       {
         return 0;
       }
-    if ( this->prerelease.empty() && ( ! o.prerelease.empty() ) )
-      {
-        return -1;
-      }
-    if ( ( ! this->prerelease.empty() ) && o.prerelease.empty() )
+    /**
+     * Having a prerelease identifier implies being "younger".
+     * So, if we don't have one and the other does, we are older.
+     */
+    if ( this->prerelease.empty() )
       {
         return 1;
       }
-    if ( this->prerelease == o.prerelease )
-      {
-        return 0;
-      }
-    if ( this->prerelease < o.prerelease )
+    if ( o.prerelease.empty() )
       {
         return -1;
       }
-    return 1;
+
+    size_t la  = this->prerelease.size();
+    size_t lo  = o.prerelease.size();
+    size_t len = std::min( la, lo );
+    for ( size_t i = 0; i < len; i++ )
+      {
+        if ( this->prerelease[i] < o.prerelease[i] )
+          {
+            return -1;
+          }
+        if ( o.prerelease[i] < this->prerelease[i] )
+          {
+            return 1;
+          }
+      }
+    return la - lo;
   }
 
 
@@ -315,23 +327,31 @@ namespace semi {
       {
         return 0;
       }
-    if ( this->build.empty() && ( ! o.build.empty() ) )
-      {
-        return -1;
-      }
-    if ( ( ! this->build.empty() ) && o.build.empty() )
+    if ( this->build.empty() )
       {
         return 1;
       }
-    if ( this->build < o.build )
+    if ( o.build.empty() )
       {
         return -1;
       }
-    if ( this->build == o.build )
+
+    size_t la  = this->build.size();
+    size_t lo  = o.build.size();
+    size_t len = std::min( la, lo );
+    for ( size_t i = 0; i < len; i++ )
       {
-        return 0;
+        if ( this->build[i] < o.build[i] )
+          {
+            return -1;
+          }
+        if ( o.build[i] < this->build[i] )
+          {
+            return 1;
+          }
       }
-    return 1;
+
+    return la - lo;
   }
 
 
