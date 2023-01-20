@@ -1,0 +1,97 @@
+/* ========================================================================== *
+ *
+ *
+ *
+ * -------------------------------------------------------------------------- */
+
+#pragma once
+
+#include <string>
+#include <vector>
+
+/* -------------------------------------------------------------------------- */
+
+namespace semi {
+
+/* -------------------------------------------------------------------------- */
+
+  struct Range {
+
+/* -------------------------------------------------------------------------- */
+
+    /* Data Members */
+
+    std::string range;
+    std::string raw;
+    /**
+     * Version ranges are a collection of subexpressions containing version
+     * constraints as their terms.
+     * Boolean "and"/"or" statements are represented as nested lists, such that
+     * the outer list is "or" statements, containing "and" statements,
+     * containing constraints.
+     *   "a || b || c && d || e" -> [[a], [b], [c, d], [e]]
+     */
+    std::vector<std::vector<std::string>> set;
+
+    /**
+     * Normally "max version" ranges will prefer lower versions if higher
+     * versioned candidates are tagged with a pre-release suffix.
+     * This option allows pre-release versions to satisfy ranges even if they
+     * don't explicitly opt into the use of pre-release specifiers.
+     */
+    bool includePrerelease;
+
+    /**
+     * Interpret version ranges loosely.
+     * This allows non-compliant ranges to be normalized without errors.
+     * Specifically this allows "00.01.002" to be read as "0.1.2"
+     */
+    bool loose;
+
+
+/* -------------------------------------------------------------------------- */
+
+    Range(
+      std::string range,
+      bool        includePrerelease = false,
+      bool        loose             = false
+    );
+
+
+/* -------------------------------------------------------------------------- */
+
+    std::vector<std::vector<std::string>> parseRange( std::string range );
+
+
+/* -------------------------------------------------------------------------- */
+
+    /* Comparators */
+
+    bool intersects( const Range & other );
+
+
+/* -------------------------------------------------------------------------- */
+
+    /* Serializers */
+
+    std::string format();
+    std::string toString();
+
+
+/* -------------------------------------------------------------------------- */
+
+
+/* -------------------------------------------------------------------------- */
+
+  };  /* End struct `Range' */
+
+
+/* -------------------------------------------------------------------------- */
+
+}  /* End Namespace `semi' */
+
+/* -------------------------------------------------------------------------- *
+ *
+ *
+ *
+ * ========================================================================== */
