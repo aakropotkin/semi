@@ -4,6 +4,8 @@
  *
  * -------------------------------------------------------------------------- */
 
+#include <sstream>
+
 #include "semver.hh"
 #include "regexes.hh"
 
@@ -11,21 +13,26 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-  static std::string
-vptos( std::optional<unsigned int> & i )
-{
-  char buf[256];
-  if ( i.has_value() )
-    {
-      std::snprintf( buf, 256, "%u", i.value() );
-    }
-  else
-    {
-      buf[0] = 'x';
-      buf[1] = '\0';
-    }
-  return std::string( buf );
-}
+  /**
+   * Stringize a version part ( major, minor, or patch ).
+   * Parts with a value are stringized as unsigned integers, while nullopts
+   * ( undeclared/unset optionals ) are rendered as 'x'.
+   */
+    static std::string
+  vptos( std::optional<unsigned int> & i )
+  {
+    char buf[256];
+    if ( i.has_value() )
+      {
+        std::snprintf( buf, 256, "%u", i.value() );
+      }
+    else
+      {
+        buf[0] = 'x';
+        buf[1] = '\0';
+      }
+    return std::string( buf );
+  }
 
 
 /* -------------------------------------------------------------------------- */
@@ -45,7 +52,7 @@ vptos( std::optional<unsigned int> & i )
     std::smatch match;
     if ( std::regex_match( version, match, pattern ) )
       {
-        this->raw   = version;
+        this->raw = version;
         if ( match[1].matched )
           {
             this->major = std::stol( match[1] );
@@ -116,6 +123,35 @@ vptos( std::optional<unsigned int> & i )
 
 /* -------------------------------------------------------------------------- */
 
+  SemVer::SemVer(
+    std::optional<unsigned int> major,
+    std::optional<unsigned int> minor,
+    std::optional<unsigned int> patch,
+    std::vector<std::string>    prerelease,
+    std::vector<std::string>    build
+  )
+  {
+    this->major             = major;
+    this->minor             = minor;
+    this->patch             = patch;
+    this->prerelease        = prerelease;
+    this->build             = build;
+    this->rtl               = false;
+    this->loose             = false;
+    this->includePrerelease = ! prerelease.empty();
+    this->version           = "";
+    this->format();
+    this->raw = this->version;
+  }
+
+
+/* -------------------------------------------------------------------------- */
+
+  /**
+   * Convert a semantic version parts to a string, updating the `version'
+   * member on this record.
+   * Build information is always omitted.
+   */
     std::string
   SemVer::format()
   {
@@ -132,7 +168,7 @@ vptos( std::optional<unsigned int> & i )
     else
       {
         std::stringstream ss;
-
+        /* Join prerelease parts with dots. */
         for (
           auto i = this->prerelease.cbegin();
           i != this->prerelease.cend();
@@ -156,6 +192,11 @@ vptos( std::optional<unsigned int> & i )
 
 /* -------------------------------------------------------------------------- */
 
+  /**
+   * Note that this does not update the `version' member before returning it.
+   * This means that if you set version parts manually on a record you need to
+   * call `format' first to render those updates.
+   */
     std::string
   SemVer::toString()
   {
@@ -248,13 +289,13 @@ vptos( std::optional<unsigned int> & i )
       {
         return 1;
       }
-    if ( this->prerelease < o.prerelease )
-      {
-        return -1;
-      }
     if ( this->prerelease == o.prerelease )
       {
         return 0;
+      }
+    if ( this->prerelease < o.prerelease )
+      {
+        return -1;
       }
     return 1;
   }
@@ -296,13 +337,13 @@ vptos( std::optional<unsigned int> & i )
 
 /* -------------------------------------------------------------------------- */
 
-  // FIXME
-    SemVer
-  SemVer::inc( const std::string release, const std::string identifier )
-  {
-    SemVer o( *this );
-    return o;
-  }
+  // TODO
+  //  SemVer
+  //SemVer::inc( const std::string release, const std::string identifier )
+  //{
+  //  SemVer o( *this );
+  //  return o;
+  //}
 
 
 /* -------------------------------------------------------------------------- */
