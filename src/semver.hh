@@ -8,6 +8,7 @@
 
 #include <string>
 #include <vector>
+#include <optional>
 
 /* -------------------------------------------------------------------------- */
 
@@ -19,9 +20,9 @@ namespace semi {
 
     std::string version;
     std::string raw;
-    unsigned int major;
-    unsigned int minor;
-    unsigned int patch;
+    std::optional<unsigned int> major;
+    std::optional<unsigned int> minor;
+    std::optional<unsigned int> patch;
     std::vector<std::string> prerelease;
     std::vector<std::string> build;
 

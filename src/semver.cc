@@ -11,6 +11,25 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
+  static std::string
+vptos( std::optional<unsigned int> & i )
+{
+  char buf[256];
+  if ( i.has_value() )
+    {
+      std::snprintf( buf, 256, "%u", i.value() );
+    }
+  else
+    {
+      buf[0] = 'x';
+      buf[1] = '\0';
+    }
+  return std::string( buf );
+}
+
+
+/* -------------------------------------------------------------------------- */
+
   SemVer::SemVer(
     const std::string version,
     bool includePrerelease,
@@ -27,22 +46,31 @@ namespace semi {
     if ( std::regex_match( version, match, pattern ) )
       {
         this->raw   = version;
-        this->major = std::stol( match[1] );
+        if ( match[1].matched )
+          {
+            this->major = std::stol( match[1] );
+          }
+        else
+          {
+            this->major = std::nullopt;
+          }
+
         if ( match[2].matched )
           {
             this->minor = std::stol( match[2] );
           }
         else
           {
-            this->minor = 0;
+            this->minor = std::nullopt;
           }
+
         if ( match[3].matched )
           {
             this->patch = std::stol( match[3] );
           }
         else
           {
-            this->patch = 0;
+            this->patch = std::nullopt;
           }
 
         if ( match[4].matched )
@@ -95,7 +123,10 @@ namespace semi {
     if ( this->prerelease.empty() )
       {
         std::snprintf(
-          buf, 256, "%u.%u.%u", this->major, this->minor, this->patch
+          buf, 256, "%s.%s.%s",
+          vptos( this->major ).c_str(),
+          vptos( this->minor ).c_str(),
+          vptos( this->patch ).c_str()
         );
       }
     else
@@ -111,8 +142,11 @@ namespace semi {
           ss << "." << *i;
         }
         std::snprintf(
-          buf, 256, "%u.%u.%u-%s",
-          this->major, this->minor, this->patch, ss.str().c_str()
+          buf, 256, "%s.%s.%s-%s",
+          vptos( this->major ).c_str(),
+          vptos( this->minor ).c_str(),
+          vptos( this->patch ).c_str(),
+          ss.str().c_str()
         );
       }
     this->version = buf;
@@ -162,15 +196,33 @@ namespace semi {
               this->loose,
               this->rtl
             );
-    if ( this->major != o.major )
+
+    if ( ! ( this->major.has_value() && o.major.has_value() ) )
       {
-        return this->major - o.major;
+        return 0;
       }
-    if ( this->minor != o.minor )
+
+    if ( this->major.value() != o.major.value() )
       {
-        return this->minor - o.minor;
+        return this->major.value() - o.major.value();
       }
-    return this->patch - o.patch;
+
+    if ( ! ( this->minor.has_value() && o.minor.has_value() ) )
+      {
+        return 0;
+      }
+
+    if ( this->minor.value() != o.minor.value() )
+      {
+        return this->minor.value() - o.minor.value();
+      }
+
+    if ( ! ( this->patch.has_value() && o.patch.has_value() ) )
+      {
+        return 0;
+      }
+
+    return this->patch.value() - o.patch.value();
   }
 
 
