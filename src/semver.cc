@@ -20,7 +20,7 @@ namespace semi {
    * ( undeclared/unset optionals ) are rendered as 'x'.
    */
     static std::string
-  vptos( std::optional<unsigned int> & i )
+  vptos( const std::optional<unsigned int> & i )
   {
     char buf[256];
     if ( i.has_value() )
