@@ -210,11 +210,11 @@ namespace semi {
     char
   SemVer::compare( const SemVer & other ) const
   {
-    SemVer o( other.version,
-              this->includePrerelease,
-              this->loose,
-              this->rtl
-            );
+    const SemVer o( other.version,
+                    this->includePrerelease,
+                    this->loose,
+                    this->rtl
+                  );
     if ( this->version == o.version )
       {
         return 0;
@@ -233,11 +233,11 @@ namespace semi {
     char
   SemVer::compareMain( const SemVer & other ) const
   {
-    SemVer o( other.version,
-              this->includePrerelease,
-              this->loose,
-              this->rtl
-            );
+    const SemVer o( other.version,
+                    this->includePrerelease,
+                    this->loose,
+                    this->rtl
+                  );
 
     if ( ! ( this->major.has_value() && o.major.has_value() ) )
       {
@@ -273,11 +273,11 @@ namespace semi {
     char
   SemVer::comparePre( const SemVer & other ) const
   {
-    SemVer o( other.version,
-              this->includePrerelease,
-              this->loose,
-              this->rtl
-            );
+    const SemVer o( other.version,
+                    this->includePrerelease,
+                    this->loose,
+                    this->rtl
+                  );
     if ( this->prerelease.empty() && o.prerelease.empty() )
       {
         return 0;
