@@ -49,8 +49,11 @@ namespace semi {
     this->loose             = loose;
     this->rtl               = rtl;
 
-    std::regex pattern( loose ? re::LOOSE : re::FULL, std::regex::ECMAScript );
+    const std::regex pattern(
+      loose ? re::LOOSE : re::FULL, std::regex::ECMAScript
+    );
     std::smatch match;
+
     if ( std::regex_match( version, match, pattern ) )
       {
         this->raw = version;
@@ -117,6 +120,7 @@ namespace semi {
           "Invalid semantic version: '" + version + "'"
         );
       }
+
     this->version = "";
     this->format();
   }
@@ -186,6 +190,7 @@ namespace semi {
           ss.str().c_str()
         );
       }
+
     this->version = buf;
     return this->version;
   }
@@ -215,15 +220,19 @@ namespace semi {
                     this->loose,
                     this->rtl
                   );
+
     if ( this->version == o.version )
       {
         return 0;
       }
-    char c = this->compareMain( other );
+
+    const char c = this->compareMain( other );
+
     if ( c != 0 )
       {
         return c;
       }
+
     return this->comparePre( other );
   }
 
@@ -278,10 +287,12 @@ namespace semi {
                     this->loose,
                     this->rtl
                   );
+
     if ( this->prerelease.empty() && o.prerelease.empty() )
       {
         return 0;
       }
+
     /**
      * Having a prerelease identifier implies being "younger".
      * So, if we don't have one and the other does, we are older.
@@ -290,14 +301,16 @@ namespace semi {
       {
         return 1;
       }
+
     if ( o.prerelease.empty() )
       {
         return -1;
       }
 
-    size_t la  = this->prerelease.size();
-    size_t lo  = o.prerelease.size();
-    size_t len = std::min( la, lo );
+    const size_t la  = this->prerelease.size();
+    const size_t lo  = o.prerelease.size();
+    const size_t len = std::min( la, lo );
+
     for ( size_t i = 0; i < len; i++ )
       {
         if ( this->prerelease[i] < o.prerelease[i] )
@@ -309,6 +322,7 @@ namespace semi {
             return 1;
           }
       }
+
     return la - lo;
   }
 
@@ -318,27 +332,31 @@ namespace semi {
     char
   SemVer::compareBuild( const SemVer & other ) const
   {
-    SemVer o( other.version,
-              this->includePrerelease,
-              this->loose,
-              this->rtl
-            );
+    const SemVer o( other.version,
+                    this->includePrerelease,
+                    this->loose,
+                    this->rtl
+                  );
+
     if ( this->build.empty() && o.build.empty() )
       {
         return 0;
       }
+
     if ( this->build.empty() )
       {
         return 1;
       }
+
     if ( o.build.empty() )
       {
         return -1;
       }
 
-    size_t la  = this->build.size();
-    size_t lo  = o.build.size();
-    size_t len = std::min( la, lo );
+    const size_t la  = this->build.size();
+    const size_t lo  = o.build.size();
+    const size_t len = std::min( la, lo );
+
     for ( size_t i = 0; i < len; i++ )
       {
         if ( this->build[i] < o.build[i] )
