@@ -173,7 +173,7 @@ namespace semi {
         for (
           auto i = this->prerelease.cbegin();
           i != this->prerelease.cend();
-          i++
+          ++i
         )
         {
           ss << "." << *i;

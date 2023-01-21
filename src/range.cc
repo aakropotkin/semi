@@ -43,7 +43,7 @@ namespace semi {
     this->includePrerelease = includePrerelease;
     this->loose             = loose;
 
-    static const std::regex delim( "\\|\\|" );
+    static const std::regex delim( "\\s*\\|\\|\\s*" );
     std::vector<std::vector<Comparator>> statements;
     std::sregex_token_iterator iter( range.begin(), range.end(), delim, -1 );
     std::sregex_token_iterator end;
@@ -120,7 +120,7 @@ namespace semi {
       {
         // TODO: this is a literal copy of the other constructor and we should
         // call it instead to DRY.
-        static const std::regex delim( "\\|\\|" );
+        static const std::regex delim( "\\s*\\|\\|\\s*" );
         std::vector<std::vector<Comparator>> statements;
         std::sregex_token_iterator iter(
           range.raw.begin(), range.raw.end(), delim, -1
@@ -202,6 +202,11 @@ namespace semi {
     std::vector<Comparator>
   Range::parseRange( const std::string range )
   {
+    const std::regex hyphen_re(
+      this->loose ? re::HYPHENRANGELOOSE : re::HYPHENRANGE
+    );
+    /* `1.2.3 - 1.2.4` => `>=1.2.3 <=1.2.4` */
+    // FIXME: they use regex replacement but that's kind of wasteful.
     return {};  // FIXME
   }
 
@@ -238,7 +243,25 @@ namespace semi {
     std::string
   Range::format()
   {
-    return this->range; // FIXME
+    std::stringstream ss;
+    /* Join "||" and "&&" statements */
+    for ( auto i = this->set.cbegin(); i != this->set.cend(); )
+      {
+        for ( auto j = i->cbegin(); j != i->cend(); )
+          {
+            ss << j->toString();
+            if ( ( ++j ) != i->cend() )
+              {
+                ss << " ";
+              }
+          }
+        if ( ( ++i ) != this->set.cend() )
+          {
+            ss << "||";
+          }
+      }
+    this->range = ss.str();
+    return this->range;
   }
 
 
