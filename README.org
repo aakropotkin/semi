@@ -1,2 +1,2 @@
 #+TITLE: Semi
-A port of `node-semver` to C++.
+A port of [[https://github.com/npm/node-semver][node-semver]] to C++.
