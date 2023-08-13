@@ -38,12 +38,11 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-  SemVer::SemVer(
-    const std::string version,
-    bool includePrerelease,
-    bool loose,
-    bool rtl
-  )
+  SemVer::SemVer( std::string_view version
+                , bool             includePrerelease
+                , bool             loose
+                , bool             rtl
+                )
   {
     this->includePrerelease = includePrerelease;
     this->loose             = loose;
@@ -54,7 +53,9 @@ namespace semi {
     );
     std::smatch match;
 
-    if ( std::regex_match( version, match, pattern ) )
+    std::string _version( version );
+
+    if ( std::regex_match( _version, match, pattern ) )
       {
         this->raw = version;
         if ( match[1].matched )
@@ -117,7 +118,7 @@ namespace semi {
     else
       {
         throw std::invalid_argument(
-          "Invalid semantic version: '" + version + "'"
+          "Invalid semantic version: '" + _version + "'"
         );
       }
 
@@ -128,23 +129,23 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-  SemVer::SemVer(
-    std::optional<unsigned int> major,
-    std::optional<unsigned int> minor,
-    std::optional<unsigned int> patch,
-    std::vector<std::string>    prerelease,
-    std::vector<std::string>    build
-  )
+  SemVer::SemVer( std::optional<unsigned int> major
+                , std::optional<unsigned int> minor
+                , std::optional<unsigned int> patch
+                , std::vector<std::string>    prerelease
+                , std::vector<std::string>    build
+                )
+    : version()
+    , major( major )
+    , minor( minor )
+    , patch( patch )
+    , prerelease( prerelease )
+    , build( build )
+    , includePrerelease( ! prerelease.empty() )
+    , loose( false )
+    , rtl( false )
   {
-    this->major             = major;
-    this->minor             = minor;
-    this->patch             = patch;
-    this->prerelease        = prerelease;
-    this->build             = build;
-    this->rtl               = false;
-    this->loose             = false;
-    this->includePrerelease = ! prerelease.empty();
-    this->version           = "";
+    /* Set `this->version' */
     this->format();
     this->raw = this->version;
   }
@@ -157,7 +158,7 @@ namespace semi {
    * member on this record.
    * Build information is always omitted.
    */
-    std::string
+    const std::string &
   SemVer::format()
   {
     char buf[256];

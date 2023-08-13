@@ -25,7 +25,7 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     static bool
-  cmp( const SemVer & a, const std::string & op, const SemVer & b, bool loose )
+  cmp( const SemVer & a, std::string_view op, const SemVer & b, bool loose )
   {
     if ( op == "===" )
       {
@@ -66,7 +66,9 @@ namespace semi {
         return _a.compare( _b ) <= 0;
       }
 
-    throw std::invalid_argument( "Invalid operator: '" + op + "'" );
+    throw std::invalid_argument(
+      "Invalid operator: '" + std::string( op ) + "'"
+    );
     /* Unreachable */
     return false;
   }
@@ -74,11 +76,10 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-  Comparator::Comparator(
-    const std::string comp,
-          bool        includePrerelease,
-          bool        loose
-  )
+  Comparator::Comparator( std::string_view comp
+                        , bool             includePrerelease
+                        , bool             loose
+                        )
   {
     this->includePrerelease = includePrerelease;
     this->loose             = loose;
@@ -93,12 +94,11 @@ namespace semi {
       }
   }
 
-  Comparator::Comparator(
-    const std::string op,
-          SemVer      semver,
-          bool        includePrerelease,
-          bool        loose
-  )
+  Comparator::Comparator( std::string_view   op
+                        , SemVer           & semver
+                        , bool               includePrerelease
+                        , bool               loose
+                        )
   {
     this->op                = op;
     this->semver            = semver;
@@ -118,13 +118,14 @@ namespace semi {
 /* -------------------------------------------------------------------------- */
 
     void
-  Comparator::parseComparator( const std::string comp )
+  Comparator::parseComparator( std::string_view comp )
   {
     const std::regex pattern(
       this->loose ? re::COMPARATORLOOSE : re::COMPARATOR, std::regex::ECMAScript
     );
+    std::string _comp( comp );
     std::smatch match;
-    if ( std::regex_match( comp, match, pattern ) )
+    if ( std::regex_match( _comp, match, pattern ) )
       {
         if ( match[1].matched )
           {
@@ -145,7 +146,7 @@ namespace semi {
         if ( match[2].matched )
           {
             this->semver =
-              SemVer( match[2], this->includePrerelease, this->loose );
+              SemVer( match[2].str(), this->includePrerelease, this->loose );
           }
         else
           {
@@ -155,7 +156,7 @@ namespace semi {
     else
       {
         throw std::invalid_argument(
-          "Invalid comparator version: '" + comp + "'"
+          "Invalid comparator version: '" + _comp + "'"
         );
       }
   }
@@ -166,11 +167,10 @@ namespace semi {
     /* Comparators */
 
     bool
-  Comparator::intersects(
-    const Comparator & other,
-          bool         includePrerelease,
-          bool         loose
-  ) const
+  Comparator::intersects( const Comparator & other
+                        ,       bool         includePrerelease
+                        ,       bool         loose
+                        ) const
   {
     if ( this->op == "" )
       {
@@ -242,7 +242,7 @@ namespace semi {
   }
 
     bool
-  Comparator::test( const std::string version ) const
+  Comparator::test( std::string_view version ) const
   {
     const SemVer o = SemVer( version, this->includePrerelease, this->loose );
     return this->test( o );

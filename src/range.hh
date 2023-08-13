@@ -18,14 +18,20 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-  struct Range {
+struct Range {
 
 /* -------------------------------------------------------------------------- */
 
+  public:
+
     /* Data Members */
 
-    std::string raw;   /* This should be a Sum Type with comparator and range */
+    /** Sum Type with comparator and range */
+    std::string raw;
+
+    /** Range  */
     std::string range;
+
     /**
      * Version ranges are a collection of subexpressions containing version
      * constraints as their terms.
@@ -54,28 +60,20 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-    Range(
-      const std::string range,
-            bool        includePrerelease = false,
-            bool        loose             = false
-    );
+    Range( std::string_view range
+         , bool             includePrerelease = false
+         , bool             loose             = false
+         );
 
-    Range(
-      const Range & range,
-            bool    includePrerelease = false,
-            bool    loose             = false
-    );
+    Range( const Range & range
+         ,       bool    includePrerelease = false
+         ,       bool    loose             = false
+         );
 
-    Range(
-      const Comparator & range,
-            bool         includePrerelease = false,
-            bool         loose             = false
-    );
-
-
-/* -------------------------------------------------------------------------- */
-
-    std::vector<Comparator> parseRange( const std::string range );
+    Range( const Comparator & range
+         ,       bool         includePrerelease = false
+         ,       bool         loose             = false
+         );
 
 
 /* -------------------------------------------------------------------------- */
@@ -84,30 +82,40 @@ namespace semi {
 
     bool intersects( const Range & other ) const;
 
-    bool test(
-      const std::string comp,
-            bool        includePrerelease = false,
-            bool        loose             = false
-    ) const;
+    bool test( std::string_view comp
+             , bool             includePrerelease = false
+             , bool             loose             = false
+             ) const;
 
-    bool test(
-      const SemVer & semver,
-            bool     includePrerelease = false,
-            bool     loose             = false
-    ) const;
+    bool test( const SemVer & semver
+             ,       bool     includePrerelease = false
+             ,       bool     loose             = false
+             ) const;
 
 
 /* -------------------------------------------------------------------------- */
 
     /* Serializers */
 
-    std::string format();
+    const std::string & format();
+
     std::string toString() const;
 
 
 /* -------------------------------------------------------------------------- */
 
-  };  /* End struct `Range' */
+  /* Helpers */
+
+  private:
+
+    void splitStatements();
+
+    std::vector<Comparator> parseRange( std::string_view range );
+
+
+/* -------------------------------------------------------------------------- */
+
+};  /* End struct `Range' */
 
 
 /* -------------------------------------------------------------------------- */

@@ -62,12 +62,11 @@ namespace semi {
      * The provided string must not omit any parts.
      * To parse a version string with missing parts you must use
      */
-    SemVer(
-      const std::string version,
-            bool        includePrerelease = false,
-            bool        loose             = false,
-            bool        rtl               = false
-    );
+    SemVer( std::string_view version
+          ,  bool            includePrerelease = false
+          ,  bool            loose             = false
+          ,  bool            rtl               = false
+          );
 
     SemVer(
       std::optional<unsigned int> major      = std::nullopt,
@@ -82,7 +81,8 @@ namespace semi {
 
     /* Serializers */
 
-    std::string format();
+    const std::string & format();
+
     std::string toString() const;
 
 
@@ -90,9 +90,9 @@ namespace semi {
 
     /* Comparators */
 
-    char compare( const SemVer & other ) const;
-    char compareMain( const SemVer & other ) const;
-    char comparePre( const SemVer & other ) const;
+    char compare(      const SemVer & other ) const;
+    char compareMain(  const SemVer & other ) const;
+    char comparePre(   const SemVer & other ) const;
     char compareBuild( const SemVer & other ) const;
 
 

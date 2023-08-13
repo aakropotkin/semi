@@ -45,18 +45,16 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-    Comparator(
-      const std::string comp              = "",
-            bool        includePrerelease = false,
-            bool        loose             = false
-    );
+    Comparator( std::string_view comp
+              , bool             includePrerelease = false
+              , bool             loose             = false
+              );
 
-    Comparator(
-      const std::string op,
-            SemVer      semver,
-            bool        includePrerelease = false,
-            bool        loose             = false
-    );
+    Comparator( std::string_view   op
+              , SemVer           & semver
+              , bool               includePrerelease = false
+              , bool               loose             = false
+              );
 
     //Comparator(
     //  std::string op,
@@ -68,21 +66,20 @@ namespace semi {
 
 /* -------------------------------------------------------------------------- */
 
-    void parseComparator( const std::string comp );
+    void parseComparator( std::string_view comp );
 
 
 /* -------------------------------------------------------------------------- */
 
     /* Comparators */
 
-    bool intersects(
-      const Comparator & other,
-            bool         includePrerelease = false,
-            bool         loose             = false
-    ) const;
+    bool intersects( const Comparator & other
+                   ,       bool         includePrerelease = false
+                   ,       bool         loose             = false
+                   ) const;
 
-    bool test( const SemVer & version ) const;
-    bool test( const std::string version ) const;
+    bool test( const SemVer     & version ) const;
+    bool test( std::string_view   version ) const;
 
 
 /* -------------------------------------------------------------------------- */
