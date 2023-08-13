@@ -7,7 +7,7 @@
 .PHONY: clean all FORCE
 .DEFAULT_GOAL = all
 
-CXXFLAGS = -std=c++17
+CXXFLAGS = -std=c++2a
 LIB_CXXFLAGS = -fPIC -shared $(CXXFLAGS)
 BIN_CXXFLAGS = $(CXXFLAGS)
 
