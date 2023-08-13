@@ -84,9 +84,11 @@ static const std::string FULLPLAIN =
 
 static const std::string FULL = "^" + FULLPLAIN + "$";
 
-// like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
-// also, 1.0.0alpha1 (prerelease without the hyphen) which is pretty
-// common in the npm registry.
+/**
+ * Like full, but allows v1.2.3 and =1.2.3, which people do sometimes.
+ * also, 1.0.0alpha1 ( prerelease without the hyphen ) which is pretty
+ * common in the npm registry.
+ */
 static const std::string LOOSEPLAIN =
   "[v=\\s]*" + MAINVERSIONLOOSE + PRERELEASELOOSE + "?" + BUILD + "?";
 
