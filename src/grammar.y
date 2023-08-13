@@ -92,7 +92,7 @@ fexp    : FLT                       { $$ = $1; }
 %%
 
   void
-calc::Parser::error( std::string_view msg )
+calc::Parser::error( const std::string & msg )
 {
   std::cerr << msg << '\n';
 }

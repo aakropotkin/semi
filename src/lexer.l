@@ -21,12 +21,9 @@ fltvar          ([[:lower:]])
 
 {integer}   yylval->emplace<long long>( strtoll( yytext, nullptr, 10 ) );
             return Parser::token::INT;
-{float}     yylval->emplace<double>( strtod( yytext, nullptr ) );
-            return Parser::token::FLT;
-{intvar}    yylval->emplace<char>( yytext[0] );
-            return Parser::token::INTVAR;
-{fltvar}    yylval->emplace<char>( yytext[0] );
-            return Parser::token::FLTVAR;
+{float}     yylval->emplace<double>( strtod( yytext, nullptr ) ); return Parser::token::FLT;
+{intvar}    yylval->emplace<char>( yytext[0] ); return Parser::token::INTVAR;
+{fltvar}    yylval->emplace<char>( yytext[0] ); return Parser::token::FLTVAR;
 "+"         return Parser::token::PLUS;
 "-"         return Parser::token::MINUS;
 "*"         return Parser::token::MULTIPLY;
