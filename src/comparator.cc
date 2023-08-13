@@ -234,9 +234,8 @@ namespace semi {
 
     bool rsl = false;
 
-    try {
-      rsl = cmp( this->semver, this->op, version, this->loose );
-    } catch( std::invalid_argument e ) {}
+    try { rsl = cmp( this->semver, this->op, version, this->loose ); }
+    catch( ... ) {}
 
     return rsl;
   }

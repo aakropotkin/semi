@@ -26,12 +26,9 @@ semver_class()
 /* -------------------------------------------------------------------------- */
 
   int
-main( int argc, char * argv[], char ** envp )
+main()
 {
-  if ( ! semver_class() )
-    {
-      return 1;
-    }
+  if ( ! semver_class() ) { return 1; }
   return 0;
 }
 
