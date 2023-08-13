@@ -162,6 +162,11 @@ Range::Range( const Comparator & range, bool includePrerelease, bool loose )
 
 /* -------------------------------------------------------------------------- */
 
+/**
+ * Parse a range part with no `||` delimiters.
+ * @param range The range part to parse.
+ * @return A collection of parsed Comparators logically delimited by `&&`s.
+ */
   std::vector<Comparator>
 Range::parseRange( std::string_view range )
 {
