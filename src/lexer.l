@@ -1,63 +1,38 @@
 %{
 #include <cstdlib>
 #include "parser.hpp"
-using namespace calc;
+#define YY_USER_ACTION yylloc.first_line = yylloc.last_line = yylineno;
 %}
 
-%option reentrant interactive noyywrap noyylineno nodefault
-%option outfile="scanner.cpp" header="scanner.hpp"
+%option noyywrap nounput
 
-dseq            ([[:digit:]]+)
-dseq_opt        ({dseq}?)
-frac            (({dseq_opt}"."{dseq})|{dseq}".")
-exp             ([eE][+-]?{dseq})
-exp_opt         ({exp}?)
-integer         ({dseq})
-float           (({frac}{exp_opt})|({dseq}{exp}))
-intvar          ([[:upper:]])
-fltvar          ([[:lower:]])
+
+DIGIT    [0-9]
 
 %%
 
-{integer}  {
-             yylval->emplace<long long>( strtoll( yytext, nullptr, 10 ) );
-             return Parser::token::INT;
-           }
-{float}    {
-             yylval->emplace<double>( strtod( yytext, nullptr ) );
-             return Parser::token::FLT;
-           }
-{intvar}   {
-             yylval->emplace<char>( yytext[0] );
-             return Parser::token::INTVAR;
-           }
-{fltvar}   {
-             yylval->emplace<char>( yytext[0] );
-             return Parser::token::FLTVAR;
-           }
-"+"        { return Parser::token::PLUS; }
-"-"        { return Parser::token::MINUS; }
-"*"        { return Parser::token::MULTIPLY; }
-"/"        { return Parser::token::DIVIDE; }
-"%"        { return Parser::token::MODULO; }
-"!"        { return Parser::token::FACTORIAL; }
-"^"        { return Parser::token::EXPONENT; }
-"("        { return Parser::token::LPAREN; }
-")"        { return Parser::token::RPAREN; }
-"="        { return Parser::token::ASSIGN; }
-\n         { return Parser::token::EOL; }
-<<EOF>>    { return Parser::token::YYEOF; }
-.          { /* no action on unmatched input */ }
+"-"            { return MINUS;   }
+"+"            { return PLUS;    }
+"*"            { return MULT;    }
+"/"            { return DIV;     }
+"="            { return EQUAL;   }
+"("            { return L_PAREN; }
+")"            { return R_PAREN; }
 
-%%
-
-  int
-main()
-{
-  yyscan_t scanner;
-  yylex_init( & scanner );
-  calc::Parser parser{ scanner };
-  std::cout.precision( 10 );
-  parser.parse();
-  yylex_destroy( scanner );
+(\.{DIGIT}+)|({DIGIT}+(\.{DIGIT}*)?([eE][+-]?[0-9]+)?)  {
+  yylval.dval = atof( yytext );
+  return NUMBER;
 }
+
+[ \t]+  { /* ignore spaces */ }
+<<EOF>> { return END;         }
+"\n"    { return END;         }
+.       {
+  printf( "Error at line %d: unrecognized symbol \"%s\"\n"
+        , yylloc.first_line
+        , yytext
+        );
+  exit( EXIT_SUCCESS );
+}
+
+%%

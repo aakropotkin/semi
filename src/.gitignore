@@ -8,3 +8,7 @@ parser.hpp
 parser.cpp
 scanner.hpp
 scanner.cpp
+lexer.cpp
+lexer.hpp
+parser.output
+simple
